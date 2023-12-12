@@ -91,13 +91,13 @@ var scanCmd = &cobra.Command{
 						errChan <- err
 						continue
 					}
-					defer file.Close()
 
 					hash := sha1.New()
 					if _, err := io.Copy(hash, file); err != nil {
 						errChan <- err
 						continue
 					}
+					file.Close()
 
 					log.Printf("%s: %x\n", filePath, hash.Sum(nil))
 
