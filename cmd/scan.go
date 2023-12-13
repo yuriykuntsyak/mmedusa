@@ -22,14 +22,16 @@ import (
 
 // Define a struct to represent the media file entry
 type MediaFile struct {
-	ID   uint   `gorm:"primaryKey"`
-	Path string `gorm:"unique"`
-	Hash string
+	ID     uint   `gorm:"primaryKey"`
+	Path   string `gorm:"unique"`
+	Hash   string
+	Exists bool
 }
 
 // var db *gorm.DB
 var path string
 var pattern string
+var verify bool
 
 // scanCmd represents the scan command
 var scanCmd = &cobra.Command{
@@ -82,38 +84,43 @@ var scanCmd = &cobra.Command{
 					var existingFile MediaFile
 					result := db.First(&existingFile, "path = ?", filePath)
 					if result.Error == nil {
-						log.Debug("File already exists in the database ", filePath)
-						continue
+						log.Debugln("File present in DB: ", filePath)
+
+						if !verify {
+							continue
+						} else {
+							log.Debugln("Verifying file: ", filePath)
+						}
 					}
 
-					file, err := os.Open(filePath)
-					if err != nil {
-						errChan <- err
-						continue
+					exists := fileExists(filePath)
+
+					if verify {
+						log.Debugln("Updating DB for file: ", filePath)
+						db.Model(&existingFile).Update("exists", exists)
+					} else {
+						sha1Sum, err := getSha1Sum(filePath)
+						if err != nil {
+							errChan <- err
+							continue
+						}
+
+						log.Infof("New file scanned %s SHA1 %x\n", filePath, sha1Sum)
+
+						// Create a new MediaFile entry
+						mediaFile := MediaFile{
+							Path:   filePath,
+							Hash:   fmt.Sprintf("%x", sha1Sum),
+							Exists: exists,
+						}
+
+						// Save the MediaFile entry to the database
+						err = db.Create(&mediaFile).Error
+						if err != nil {
+							errChan <- err
+							continue
+						}
 					}
-
-					hash := sha1.New()
-					if _, err := io.Copy(hash, file); err != nil {
-						errChan <- err
-						continue
-					}
-					file.Close()
-
-					log.Printf("%s: %x\n", filePath, hash.Sum(nil))
-
-					// Create a new MediaFile entry
-					mediaFile := MediaFile{
-						Path: filePath,
-						Hash: fmt.Sprintf("%x", hash.Sum(nil)),
-					}
-
-					// Save the MediaFile entry to the database
-					err = db.Create(&mediaFile).Error
-					if err != nil {
-						errChan <- err
-						continue
-					}
-
 				}
 			}()
 		}
@@ -153,6 +160,7 @@ func init() {
 
 	scanCmd.Flags().StringVarP(&path, "path", "p", "", "Path to scan")
 	scanCmd.Flags().StringVarP(&pattern, "pattern", "", "", "Pattern to match")
+	scanCmd.Flags().BoolVarP(&verify, "verify", "", false, "Verify if the scanned files still exist")
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
@@ -161,4 +169,30 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// scanCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func getSha1Sum(filePath string) ([]byte, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	hash := sha1.New()
+	if _, err := io.Copy(hash, file); err != nil {
+		return nil, err
+	}
+
+	return hash.Sum(nil), nil
+}
+
+func fileExists(filePath string) bool {
+	_, err := os.Stat(filePath)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return false
 }
