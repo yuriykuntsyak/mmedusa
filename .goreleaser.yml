@@ -34,12 +34,7 @@ changelog:
   sort: asc
 
 brews:
-  -
-    # Name of the recipe
-    #
-    # Default: ProjectName
-    # Templates: allowed
-    name: {{ .ProjectName }}
+  - name: medusa
 
     # Alternative names for the current recipe.
     #
@@ -129,7 +124,7 @@ brews:
     # Can be used to specify alternate downloads for devel or head releases.
     custom_block: |
       head "git@github.com:yuriykuntsyak/mmedusa.git"
-      ...
+
 
     # Packages your package depends on.
     dependencies: []
@@ -155,7 +150,6 @@ brews:
     # Template: allowed
     test: |
       system "#{bin}/mmedusa --help"
-      # ...
 
     # Custom install script for brew.
     #
@@ -191,7 +185,7 @@ brews:
       # Repository name.
       #
       # Templates: allowed
-      name: {{ .ProjectName }}
+      name: medusa
 
       # Optionally a branch can be provided.
       #
@@ -202,7 +196,7 @@ brews:
       # Optionally a token can be provided, if it differs from the token
       # provided to GoReleaser
       # Templates: allowed
-      token: "{{ .Env.GITHUB_PERSONAL_AUTH_TOKEN }}"
+      # token: "{{ .Env.GITHUB_PERSONAL_AUTH_TOKEN }}"
 
       # Sets up pull request creation instead of just pushing to the given branch.
       # Make sure the 'branch' property is different from base before enabling
