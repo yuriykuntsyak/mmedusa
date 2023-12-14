@@ -36,6 +36,10 @@ changelog:
 brews:
   - name: mmedusa
 
+    tap:
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+
+
     # Alternative names for the current recipe.
     #
     # Useful if you want to publish a versioned formula as well, so users can
