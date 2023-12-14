@@ -181,6 +181,7 @@ brews:
 
     # Repository to push the generated files to.
     repository:
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
       # Repository owner.
       #
       # Templates: allowed
