@@ -185,7 +185,7 @@ brews:
       # Repository name.
       #
       # Templates: allowed
-      name: mmedusa
+      name: homebrew-mmedusa
 
       # Optionally a branch can be provided.
       #
