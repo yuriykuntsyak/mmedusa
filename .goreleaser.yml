@@ -34,7 +34,7 @@ changelog:
   sort: asc
 
 brews:
-  - name: medusa
+  - name: mmedusa
 
     # Alternative names for the current recipe.
     #
@@ -185,7 +185,7 @@ brews:
       # Repository name.
       #
       # Templates: allowed
-      name: medusa
+      name: mmedusa
 
       # Optionally a branch can be provided.
       #
