@@ -12,8 +12,11 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-      # - windows
+      - windows
       - darwin
+    ignore:
+      - goos: windows
+        goarch: '386'
 
 archives:
   - format: tar.gz
@@ -25,31 +28,19 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
-    # use zip for windows archives
-    # format_overrides:
-    #   - goos: windows
-    #     format: zip
+    use zip for windows archives
+    format_overrides:
+      - goos: windows
+        format: zip
 
 changelog:
   sort: asc
 
 brews:
   - name: mmedusa
+    folder: .
 
-    # Alternative names for the current recipe.
-    #
-    # Useful if you want to publish a versioned formula as well, so users can
-    # more easily downgrade.
-    #
-    # Since: v1.20 (pro)
-    # Templates: allowed
-    # alternative_names:
-    #   - {{ .ProjectName }}@{{ .Version }}
-    #   - {{ .ProjectName }}@{{ .Major }}
 
-    # IDs of the archives to use.
-    # Empty means all IDs.
-    ids: []
 
     # GOARM to specify which 32-bit arm version to use if there are multiple
     # versions from the build section. Brew formulas support only one 32-bit
@@ -63,16 +54,6 @@ brews:
     #
     # Default: v1
     goamd64: v1
-
-    # NOTE: make sure the url_template, the token and given repo (github or
-    # gitlab) owner and name are from the same kind.
-    # We will probably unify this in the next major version like it is
-    # done with scoop.
-
-    # URL which is determined by the given Token (github, gitlab or gitea).
-    #
-    # Default depends on the client.
-    # Templates: allowed
     url_template: "https://github.com/yuriykuntsyak/{{ .ProjectName }}/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     download_strategy: CurlDownloadStrategy
 
@@ -87,16 +68,7 @@ brews:
     homepage: "https://github.com/yuriykuntsyak/mmedusa"
     description: "A tool for managing and deduplicating media files."
     license: "Apache 2.0"
-
-    # Setting this will prevent goreleaser to actually try to commit the updated
-    # formula - instead, the formula file will be stored on the dist folder only,
-    # leaving the responsibility of publishing it to the user.
-    # If set to auto, the release will not be uploaded to the homebrew tap
-    # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
-    #
-    # Templates: allowed
     skip_upload: false
-
     test: |
       system "#{bin}/mmedusa --help"
 
