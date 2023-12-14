@@ -36,10 +36,6 @@ changelog:
 brews:
   - name: mmedusa
 
-    tap:
-      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
-
-
     # Alternative names for the current recipe.
     #
     # Useful if you want to publish a versioned formula as well, so users can
@@ -78,41 +74,18 @@ brews:
     # Default depends on the client.
     # Templates: allowed
     url_template: "https://github.com/yuriykuntsyak/{{ .ProjectName }}/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-
-    # Allows you to set a custom download strategy. Note that you'll need
-    # to implement the strategy and add it to your tap repository.
-    # Example: https://docs.brew.sh/Formula-Cookbook#specifying-the-download-strategy-explicitly
     download_strategy: CurlDownloadStrategy
-
-    # Allows you to add a custom require_relative at the top of the formula
-    # template.
-    # custom_require: custom_download_strategy
 
     # Git author used to commit to the repository.
     commit_author:
       name: Yuriy K
       email: yuriy@yuriyk.dev
 
-    # The project name and current git tag are used in the format string.
-    #
-    # Templates: allowed
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
-
-    # Folder inside the repository to put the formula.
     folder: Formula
-
-    # Caveats for the user of your binary.
     caveats: "How to use this binary"
-
-    # Your app's homepage.
     homepage: "https://github.com/yuriykuntsyak/mmedusa"
-
-    # Your app's description.
-    #
-    # Templates: allowed
     description: "A tool for managing and deduplicating media files."
-
-    # SPDX identifier of your app's license.
     license: "Apache 2.0"
 
     # Setting this will prevent goreleaser to actually try to commit the updated
@@ -124,93 +97,25 @@ brews:
     # Templates: allowed
     skip_upload: false
 
-    # Custom block for brew.
-    # Can be used to specify alternate downloads for devel or head releases.
-    custom_block: |
-      head "git@github.com:yuriykuntsyak/mmedusa.git"
-
-
-    # Packages your package depends on.
-    dependencies: []
-
-
-    # Packages that conflict with your package.
-    conflicts: []
-
-    # Specify for packages that run as a service.
-    # plist: |
-    #   <?xml version="1.0" encoding="UTF-8"?>
-    #   # ...
-
-    # Service block.
-    #
-    # Since: v1.7
-    # service: |
-    #   run: foo/bar
-    #   # ...
-
-    # So you can `brew test` your formula.
-    #
-    # Template: allowed
+ 
     test: |
       system "#{bin}/mmedusa --help"
-
-    # Custom install script for brew.
-    #
-    # Template: allowed
-    # Default: 'bin.install "BinaryName"'
-    # install: |
-    #   bin.install "some_other_name"
-    #   bash_completion.install "completions/foo.bash" => "foo"
-    #   # ...
-
-    # Additional install instructions so you don't need to override `install`.
-    #
-    # Template: allowed
-    # Since: v1.20.
-    # extra_install: |
-    #   bash_completion.install "completions/foo.bash" => "foo"
-    #   man1.install "man/foo.1.gz"
-    #   # ...
-
-    # Custom post_install script for brew.
-    # Could be used to do any additional work after the "install" script
-    # post_install: |
-    #     etc.install "app-config.conf"
-    #   # ...
 
     # Repository to push the generated files to.
     repository:
       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
-      # Repository owner.
-      #
-      # Templates: allowed
       owner: yuriykuntsyak
-
-      # Repository name.
-      #
-      # Templates: allowed
       name: homebrew-mmedusa
 
-      # Optionally a branch can be provided.
-      #
-      # Default: default repository branch
-      # Templates: allowed
-      branch: main
-
-      # Optionally a token can be provided, if it differs from the token
-      # provided to GoReleaser
-      # Templates: allowed
-      # token: "{{ .Env.GITHUB_PERSONAL_AUTH_TOKEN }}"
 
       # Sets up pull request creation instead of just pushing to the given branch.
       # Make sure the 'branch' property is different from base before enabling
       # it.
       #
       # Since: v1.17
-      # pull_request:
-      #   # Whether to enable it or not.
-      #   enabled: true
+      pull_request:
+        # Whether to enable it or not.
+        enabled: true
 
       #   # Whether to open the PR as a draft or not.
       #   #
@@ -232,34 +137,3 @@ brews:
       #     owner: goreleaser
       #     name: mmedusa
       #     branch: main
-
-      # Clone, create the file, commit and push, to a regular Git repository.
-      #
-      # Notice that this will only have any effect if the given URL is not
-      # empty.
-      #
-      # Since: v1.18
-      # git:
-      #   # The Git URL to push.
-      #   #
-      #   # Templates: allowed
-      #   url: 'ssh://git@myserver.com:repo.git'
-
-      #   # The SSH private key that should be used to commit to the Git
-      #   # repository.
-      #   # This can either be a path or the key contents.
-      #   #
-      #   # IMPORTANT: the key must not be password-protected.
-      #   #
-      #   # WARNING: do not expose your private key in the configuration file!
-      #   #
-      #   # Templates: allowed
-      #   private_key: '{{ .Env.PRIVATE_KEY_PATH }}'
-
-      #   # The value to be passed to `GIT_SSH_COMMAND`.
-      #   # This is mainly used to specify the SSH private key used to pull/push
-      #   # to the Git URL.
-      #   #
-      #   # Default: 'ssh -i {{ .KeyPath }} -o StrictHostKeyChecking=accept-new -F /dev/null'
-      #   # Templates: allowed
-      #   ssh_command: 'ssh -i {{ .Env.KEY }} -o SomeOption=yes'
