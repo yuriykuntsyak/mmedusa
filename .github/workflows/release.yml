@@ -1,53 +1,33 @@
-name: Release
+name: goreleaser
+
 on:
-    push:
-        tags:
-            - 'v[0-9]+.*'
+  push:
+    # # run only against tags
+    # tags:
+    #   - "*"
+
+permissions:
+  contents: write
+  # packages: write
+  # issues: write
 
 jobs:
-  build:
+  goreleaser:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@v3
         with:
-          go-version: 'stable'
-
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Get dependencies
-        run: go get -v -t -d ./...
-
-      - name: Install gox
-        run: go install github.com/mitchellh/gox@latest
-
-      - name: Build
-        run: gox -os="linux darwin" -arch="amd64 arm64" -osarch="linux/arm" -output="build/{{.Dir}}_{{.OS}}_{{.Arch}}"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+          fetch-depth: 0
+      - run: git fetch --force --tags
+      - uses: actions/setup-go@v4
+        with:
+          go-version: stable
+      # More assembly might be required: Docker logins, GPG, etc.
+      # It all depends on your needs.
+      - uses: goreleaser/goreleaser-action@v5
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-          body: |
-            $(git log --pretty=format:"- %s%n%b" $(git describe --tags --abbrev=0)..HEAD)
-
-      - name: Upload Release Assets
-        run: |
-          for file in $(ls ./build/); do
-            if [[ -f "$file" ]]; then
-              echo "Uploading $file"
-              curl --fail \
-                -X POST \
-                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Content-Type: $(file -b --mime-type $file)" \
-                --data-binary @$file \
-                "${{ steps.create_release.outputs.upload_url }}/assets?name=$(basename $file)"
-            fi
-          done
