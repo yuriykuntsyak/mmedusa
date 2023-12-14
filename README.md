@@ -10,7 +10,15 @@
 
 ## Installation
 
-To install `mmedusa`, you can download the latest binary from the [releases page](https://github.com/yuriykuntsyak/mmedusa/releases) or build it from source:
+### Homebrew
+```bash
+brew install yuriykuntsyak/mmedusa/mmedusa
+```
+
+### Manual
+Download the latest binary from the [releases page](https://github.com/yuriykuntsyak/mmedusa/releases) 
+
+### Build from source
 
 ```bash
 go get github.com/yuriykuntsyak/mmedusa
