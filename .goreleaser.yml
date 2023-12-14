@@ -38,10 +38,6 @@ changelog:
 
 brews:
   - name: mmedusa
-    folder: .
-
-
-
     # GOARM to specify which 32-bit arm version to use if there are multiple
     # versions from the build section. Brew formulas support only one 32-bit
     # version.
@@ -63,7 +59,6 @@ brews:
       email: yuriykuntsyak@gmail.com
 
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
-    folder: Formula
     caveats: "How to use this binary"
     homepage: "https://github.com/yuriykuntsyak/mmedusa"
     description: "A tool for managing and deduplicating media files."
