@@ -1,6 +1,6 @@
 # mmedusa
+[![ci](https://github.com/yuriykuntsyak/mmedusa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/yuriykuntsyak/mmedusa/actions/workflows/ci.yml)
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/yuriykuntsyak/mmedusa/.github/workflows/go.yml?branch=main)
 [![Go Report Card](https://goreportcard.com/badge/github.com/yuriykuntsyak/mmedusa)](https://goreportcard.com/report/github.com/yuriykuntsyak/mmedusa)
 
 
