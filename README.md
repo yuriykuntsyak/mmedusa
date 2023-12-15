@@ -1,6 +1,5 @@
 # mmedusa
 [![ci](https://github.com/yuriykuntsyak/mmedusa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/yuriykuntsyak/mmedusa/actions/workflows/ci.yml)
-
 [![Go Report Card](https://goreportcard.com/badge/github.com/yuriykuntsyak/mmedusa)](https://goreportcard.com/report/github.com/yuriykuntsyak/mmedusa)
 
 
