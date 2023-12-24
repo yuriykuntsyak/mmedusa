@@ -36,3 +36,19 @@ jobs:
 
       - name: Test
         run: go test -race -cover ./...
+
+  codeql:
+    name: "CodeQL"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: "go"
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
