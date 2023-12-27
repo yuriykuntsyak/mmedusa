@@ -10,6 +10,7 @@ on:
 
 jobs:
   golangci:
+    name: "Go Lint, Build, and Test"
     runs-on:
       - ubuntu-latest
       # - macos-latest  # this is a 10x cost increase
