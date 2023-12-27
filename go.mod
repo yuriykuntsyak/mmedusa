@@ -1,6 +1,6 @@
 module github.com/yuriykuntsyak/mmedusa
 
-go 1.21.5
+go 1.21
 
 require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
