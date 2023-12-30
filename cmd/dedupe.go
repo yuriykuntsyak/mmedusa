@@ -12,7 +12,7 @@ import (
 // dedupeCmd represents the dedupe command
 var dedupeCmd = &cobra.Command{
 	Use:   "dedupe",
-	Short: "A brief description of your command",
+	Short: "Detect duplicate media files.",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
